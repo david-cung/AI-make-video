@@ -13,6 +13,7 @@ class ProjectInput:
     cta_text: str
     background_video_path: Path
     output_folder: Path
+    video_template: str = "Problem Solution"
 
 
 @dataclass(frozen=True)

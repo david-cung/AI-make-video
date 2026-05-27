@@ -1,16 +1,15 @@
 from __future__ import annotations
 
-import os
-import sys
 import sqlite3
 from pathlib import Path
 
 from app.models.project import ProjectRecord
+from app.utils.app_paths import database_path
 
 
 class Database:
     def __init__(self, db_path: Path | None = None) -> None:
-        self.db_path = db_path or self._default_db_path()
+        self.db_path = db_path or database_path()
 
     def initialize(self) -> None:
         try:
@@ -72,21 +71,6 @@ class Database:
         connection = sqlite3.connect(self.db_path)
         connection.row_factory = sqlite3.Row
         return connection
-
-    def _default_db_path(self) -> Path:
-        env_path = os.getenv("AIVB_DB_PATH")
-        if env_path:
-            return Path(env_path).expanduser()
-
-        if sys.platform == "win32":
-            app_data = os.getenv("LOCALAPPDATA") or os.getenv("APPDATA")
-            base_path = Path(app_data) if app_data else Path.home() / "AppData" / "Local"
-            return base_path / "AI Affiliate Video Builder" / "projects.sqlite3"
-
-        if sys.platform == "darwin":
-            return Path.home() / "Library" / "Application Support" / "AI Affiliate Video Builder" / "projects.sqlite3"
-
-        return Path.home() / ".local" / "share" / "ai-affiliate-video-builder" / "projects.sqlite3"
 
     def _fallback_db_path(self) -> Path:
         return Path.cwd() / ".aivb_data" / "projects.sqlite3"

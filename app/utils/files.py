@@ -19,7 +19,7 @@ def ensure_folder(path: Path) -> Path:
     return path
 
 
-def make_project_folder(output_folder: Path, product_name: str) -> Path:
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    folder_name = f"{safe_filename(product_name)}_{timestamp}"
+def make_project_folder(output_folder: Path, product_name: str, created_at: datetime | None = None) -> Path:
+    timestamp = (created_at or datetime.now()).strftime("%Y%m%d_%H%M%S")
+    folder_name = f"{timestamp}_{safe_filename(product_name)}"
     return ensure_folder(output_folder / folder_name)
